@@ -34,7 +34,7 @@ const ExpenseCard = ({ expense }: { expense: ExpenseType }) => {
 
                 <View className="flex-1">
                     <Text className="text-base font-semibold text-gray-900 mb-1" numberOfLines={1}>
-                        {expense.description || 'No description'}
+                        {expense.name || 'No description'}
                     </Text>
                     <Text className="text-sm text-gray-500">
                         {formatDate(expense.createdAt)}
