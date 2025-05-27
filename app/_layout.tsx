@@ -15,6 +15,9 @@ import { ToastProvider } from "react-native-toast-notifications";
 import { RecoilRoot } from "recoil";
 import { AuthProvider } from "@/hooks/useAuth";
 
+
+
+
 export default function RootLayout() {
   const colorScheme = useColorScheme();
   const [loaded] = useFonts({
@@ -48,6 +51,7 @@ export default function RootLayout() {
                 <Stack.Screen name="(auth)" options={{ headerShown: false }} />
                 <Stack.Screen name="(root)" options={{ headerShown: false }} />
                 <Stack.Screen name="expense/[expenseId]" options={{ headerShown: false }} />
+                <Stack.Screen name="expense/edit/[expenseId]" options={{ headerShown: false }} />
                 <Stack.Screen name="+not-found" />
               </Stack>
               <StatusBar style="auto" />

@@ -14,14 +14,17 @@ export default function useExpenses() {
 
     const [deletingExpense, setDeletingExpense] = useState(false)
     const [addingExpense, setAddingExpense] = useState(false);
-     const [updatingExpense, setUpdatingExpense] = useState(false);
+    const [updatingExpense, setUpdatingExpense] = useState(false);
 
-    const { data: expenses, mutate: mutatingExpenses, error: errorFetchingExpenses } = useSWR<Expenses[]>("/expenses",
+    const { data: allExpenses, mutate: mutatingExpenses, error: errorFetchingExpenses } = useSWR<Expenses[]>("/expenses",
         async (url: string) => {
             const { data } = await axios.get(url);
             return data;
         }
     )
+
+
+    const expenses = allExpenses ? allExpenses.slice(0, 100) : [];
 
     const getExpenseById = async (expenseId: number) => {
         try {
@@ -32,6 +35,7 @@ export default function useExpenses() {
                 type: "danger",
             });
             console.error("Error while retrieving expense detail: ", error?.message)
+            router.replace("/(root)/(tabs)/expenses");
         }
     }
 
@@ -39,9 +43,9 @@ export default function useExpenses() {
         setAddingExpense(true);
         try {
             await axios.post("/expenses", expenseData);
-            await mutatingExpenses(); 
+            await mutatingExpenses();
             toast.show("Expense created successfully", { type: "success" });
-            router.replace("/(root)/(tabs)/expenses"); 
+            router.replace("/(root)/(tabs)/expenses");
         } catch (error: any) {
             toast.show("Failed to create expense", { type: "danger" });
             console.error("Create expense error:", error?.message);
@@ -54,9 +58,9 @@ export default function useExpenses() {
         setUpdatingExpense(true);
         try {
             await axios.put(`/expenses/${expenseId}`, expenseData);
-            await mutatingExpenses(); 
+            await mutatingExpenses();
             toast.show("Expense updated successfully", { type: "success" });
-            router.back(); 
+            router.back();
         } catch (error: any) {
             toast.show("Failed to update expense", { type: "danger" });
             console.error("Update expense error:", error?.message);

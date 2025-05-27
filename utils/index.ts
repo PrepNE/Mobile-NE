@@ -1,3 +1,33 @@
+import { formatDistanceToNow, isToday, isYesterday } from 'date-fns';
+
+export const formatRelativeDate = (dateString: string) => {
+  const date = new Date(dateString);
+
+  if (isToday(date)) {
+    const diff = formatDistanceToNow(date, { addSuffix: true });
+
+    if (diff.includes('less than a minute')) return '1 sec ago';
+
+    return diff
+      .replace('about ', '')
+      .replace('less than ', '')
+      .replace('minutes ago', 'min ago')
+      .replace('minute ago', '1 min ago')
+      .replace('hours ago', 'hours ago')
+      .replace('hour ago', '1 hour ago');
+  }
+
+  if (isYesterday(date)) {
+    return 'Yesterday';
+  }
+
+  return date.toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  });
+};
+
 export const getInitials = (input: string) => {
     if (input.includes(' ')) {
         const nameParts = input.trim().split(' ');

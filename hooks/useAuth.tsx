@@ -10,7 +10,8 @@ interface User {
   name: string;
   username: string;
   email: string;
-  password?: string; 
+  password?: string;
+  createdAt?: string;
 }
 
 interface AuthContextType {
@@ -32,26 +33,34 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const toast = useToast();
 
   useEffect(() => {
+    let isMounted = true;
+
     const loadUserFromStorage = async () => {
       try {
         const storedUser = await AsyncStorage.getItem("user");
-        if (storedUser) {
+        if (storedUser && isMounted) {
           setUser(JSON.parse(storedUser));
         }
       } catch (err) {
         console.log("Failed to load user from AsyncStorage:", err);
       } finally {
-        setInitialLoading(false);
+        if (isMounted) {
+          setInitialLoading(false);
+        }
       }
     };
 
     loadUserFromStorage();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   const login = async (username: string, password: string) => {
     setLoading(true);
     setError(null);
-    
+
     try {
       const { data } = await axios.get("/users", {
         params: {
@@ -59,7 +68,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         },
       });
 
-      const foundUser = data.find((user: User) => 
+      const foundUser = data.find((user: User) =>
         user.username?.toLowerCase().trim() === username.toLowerCase().trim()
       );
 
@@ -69,7 +78,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         toast.show(errorMessage, { type: "error" });
         return; // Exit early instead of throwing
       }
-      
+
       if (foundUser.password !== password) {
         const errorMessage = "Invalid email or password";
         setError(errorMessage);
@@ -79,17 +88,17 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
       // Success case - credentials are valid
       const { password: _, ...userWithoutPassword } = foundUser;
-      
+
       setUser(userWithoutPassword);
       await AsyncStorage.setItem("user", JSON.stringify(userWithoutPassword));
 
       toast.show("Login Successful", { type: "success" });
       router.replace("/(root)/(tabs)/expenses");
-      
+
     } catch (err: any) {
       // This catch block now only handles network/server errors
       let message = "Login failed";
-      
+
       if (err.response?.status === 404) {
         message = "Invalid email or password";
       } else if (err.response?.status >= 500) {
@@ -97,7 +106,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       } else if (err.message) {
         message = err.message;
       }
-      
+
       setError(message);
       toast.show(message, { type: "error" });
     } finally {
@@ -109,7 +118,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     try {
       setUser(null);
       await AsyncStorage.removeItem("user");
-      
+
       toast.show("Logout Successful", { type: "success" });
       router.replace("/(auth)/sign-in");
     } catch (err) {

@@ -15,7 +15,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { formatAmount, formatDate } from "@/utils";
 
 const ExpenseDetails = () => {
-  const { getExpenseById , deleteExpense } = useExpenses();
+  const { getExpenseById, deleteExpense } = useExpenses();
   const router = useRouter();
   const toast = useToast();
   const pathname = usePathname();
@@ -51,7 +51,7 @@ const ExpenseDetails = () => {
   }, [expenseId]);
 
   const handleDeleteExpense = async () => {
-      await deleteExpense(expenseId);
+    await deleteExpense(expenseId);
   }
 
 
@@ -96,7 +96,12 @@ const ExpenseDetails = () => {
         </Text>
 
         <TouchableOpacity
-        //   onPress={() => router.push("/expenses/edit/" + expense.id)}
+          onPress={() =>
+            router.push({
+              pathname: "/expense/edit/[expenseId]",
+              params: { expenseId: String(expense.id) },
+            })
+          }
           className="p-2 rounded-full bg-gray-100"
         >
           <Ionicons name="create-outline" size={24} color="#374151" />
@@ -194,7 +199,12 @@ const ExpenseDetails = () => {
       <View className="px-4 py-4 border-t border-gray-100 bg-white">
         <View className="flex-row space-x-3">
           <TouchableOpacity
-            // onPress={() => router.push("/expenses/edit/" + expense.id)}
+            onPress={() =>
+              router.push({
+                pathname: "/expense/edit/[expenseId]",
+                params: { expenseId: String(expense.id) },
+              })
+            }
             className="flex-1 bg-blue-500 py-4 rounded-xl flex-row justify-center items-center"
           >
             <Ionicons name="create-outline" size={20} color="white" />
@@ -202,6 +212,7 @@ const ExpenseDetails = () => {
               Edit Expense
             </Text>
           </TouchableOpacity>
+          
 
           <TouchableOpacity
             onPress={handleDeleteExpense}
@@ -211,20 +222,7 @@ const ExpenseDetails = () => {
           </TouchableOpacity>
         </View>
 
-        <TouchableOpacity
-          onPress={() => {
-            // Add share functionality here
-            toast.show("Share functionality not implemented", {
-              type: "info",
-            });
-          }}
-          className="mt-3 bg-gray-100 py-3 rounded-xl flex-row justify-center items-center"
-        >
-          <Ionicons name="share-outline" size={18} color="#374151" />
-          <Text className="text-gray-700 font-medium ml-2">
-            Share Expense Details
-          </Text>
-        </TouchableOpacity>
+        
       </View>
     </SafeAreaView>
   );
