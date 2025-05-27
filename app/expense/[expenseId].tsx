@@ -97,9 +97,8 @@ const ExpenseDetails = () => {
 
         <TouchableOpacity
           onPress={() =>
-            router.push({
-              pathname: "/expense/edit/[expenseId]",
-              params: { expenseId: String(expense.id) },
+            toast.show("Edit functionality coming soon!", {
+              type: "info",
             })
           }
           className="p-2 rounded-full bg-gray-100"
@@ -200,9 +199,8 @@ const ExpenseDetails = () => {
         <View className="flex-row space-x-3">
           <TouchableOpacity
             onPress={() =>
-              router.push({
-                pathname: "/expense/edit/[expenseId]",
-                params: { expenseId: String(expense.id) },
+              toast.show("Edit functionality coming soon!", {
+                type: "info",
               })
             }
             className="flex-1 bg-blue-500 py-4 rounded-xl flex-row justify-center items-center"
