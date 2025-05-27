@@ -1,50 +1,81 @@
-# Welcome to your Expo app 👋
+# 📱 Personal Finance Tracker – National Integrated Assessment Exam
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+## 📝 Project Overview
 
-## Get started
+**ABCD Ltd**, a Kigali-based software company, has been contracted to develop a **cross-platform mobile application** to help individuals manage their personal finances. The application must be compatible with **Android** and **iOS** platforms using **React Native**.
 
-1. Install dependencies
+As a mobile app developer, task was to build a **Personal Finance Tracker** app that allows users to:
 
-   ```bash
-   npm install
-   ```
+- Log in using valid credentials
+- Record daily expenses
+- View individual expense details
+- List all expenses
+- Delete expenses
+- Receive meaningful error messages and ensure smooth UI/UX
 
-2. Start the app
+---
 
-   ```bash
-   npx expo start
-   ```
+## 🛠 Technologies Used
 
-In the output, you'll find options to open the app in a
+- 📱 **React Native** (with Expo)
+- 🧠 **Recoil** for state management
+- 🔒 **AsyncStorage** for session handling
+- 🔄 **Axios** for API communication
+- 🌐 **MockAPI** for backend endpoints
+- 🌍 Cross-platform compatibility (Android and iOS)
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+---
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## 🧪 Exam Requirements
 
-## Get a fresh project
+### ✅ Functional Requirements
 
-When you're ready, run:
+| Task # | Description                                 | Endpoint Used                        |
+|--------|---------------------------------------------|--------------------------------------|
+| 1      | Allow user login using username & password  | `GET /users?username={email}`        |
+| 2      | Create a new expense                       | `POST /expenses`                     |
+| 3      | View expense details                       | `GET /expenses/{expenseId}`          |
+| 4      | List all expenses                          | `GET /expenses`                      |
+| 5      | Delete a specific expense                  | `DELETE /expenses/{expenseId}`       |
 
-```bash
-npm run reset-project
+---
+
+## 🔗 API Base URL
+
+```
+https://67ac71475853dff153dab929.mockapi.io/api/v1
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+- **Users** endpoint: `/users`
+- **Expenses** endpoint: `/expenses`
 
-## Learn more
+---
 
-To learn more about developing your project with Expo, look at the following resources:
+## ⚙️ Setup Instructions
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+### 1. Clone the Repository
 
-## Join the community
+```bash
+git clone https://github.com/yourusername/personal-finance-tracker.git
+cd personal-finance-tracker
+```
 
-Join our community of developers creating universal apps.
+### 2. Install Dependencies
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+```bash
+  pnpm install
+```
+
+### 3. Start the App
+
+```bash
+  pnpm dev
+```
+
+---
+
+## 📋 Notes
+
+- Input validation and error handling are implemented throughout the app.
+- All API requests use **axios**.
+- Test the app using **Expo CLI** on Android/iOS simulators or physical devices.
