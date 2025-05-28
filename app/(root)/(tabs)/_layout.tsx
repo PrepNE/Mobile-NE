@@ -1,6 +1,6 @@
 import { Tabs } from "expo-router";
-import React from "react";
-import { Platform } from "react-native";
+import React, { useEffect, useState } from "react";
+import { Keyboard, Platform } from "react-native";
 import TabBarBackground from "@/components/ui/TabBarBackground";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
@@ -9,22 +9,38 @@ import { TabBarIcon } from "@/components/navigation/TabBarIcon";
 export default function TabLayout() {
   const colorScheme = useColorScheme();
 
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener("keyboardDidShow", () =>
+      setKeyboardVisible(true)
+    );
+    const keyboardDidHideListener = Keyboard.addListener("keyboardDidHide", () =>
+      setKeyboardVisible(false)
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
+
   return (
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
         tabBarInactiveTintColor: Colors[colorScheme ?? "light"].tabIconDefault,
         headerShown: false,
- 
         tabBarBackground: TabBarBackground,
         tabBarStyle: [
           {
-            height: Platform.OS === 'ios' ? 90 : 70,
-            paddingBottom: Platform.OS === 'ios' ? 25 : 10,
+            display: isKeyboardVisible ? "none" : "flex",
+            height: Platform.OS === "ios" ? 90 : 70,
+            paddingBottom: Platform.OS === "ios" ? 25 : 10,
             paddingTop: 10,
             borderTopWidth: 0,
             elevation: 20,
-            shadowColor: '#000',
+            shadowColor: "#000",
             shadowOffset: {
               width: 0,
               height: -3,
@@ -41,7 +57,7 @@ export default function TabLayout() {
         ],
         tabBarLabelStyle: {
           fontSize: 12,
-          fontWeight: '600',
+          fontWeight: "600",
           marginTop: 4,
         },
         tabBarIconStyle: {
@@ -54,9 +70,9 @@ export default function TabLayout() {
         options={{
           title: "Expenses",
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon 
-              name={focused ? "list" : "list-outline"} 
-              color={color} 
+            <TabBarIcon
+              name={focused ? "list" : "list-outline"}
+              color={color}
               size={24}
             />
           ),
@@ -69,16 +85,16 @@ export default function TabLayout() {
         options={{
           title: "Add Expense",
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon 
-              name={focused ? "add-circle" : "add-circle-outline"} 
-              color={color} 
+            <TabBarIcon
+              name={focused ? "add-circle" : "add-circle-outline"}
+              color={color}
               size={28}
             />
           ),
           tabBarAccessibilityLabel: "Add Expense - Create new expense entry",
           tabBarLabelStyle: {
             fontSize: 11,
-            fontWeight: '700',
+            fontWeight: "700",
           },
         }}
       />
@@ -88,9 +104,9 @@ export default function TabLayout() {
         options={{
           title: "Details",
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon 
-              name={focused ? "document-text" : "document-text-outline"} 
-              color={color} 
+            <TabBarIcon
+              name={focused ? "document-text" : "document-text-outline"}
+              color={color}
               size={24}
             />
           ),
@@ -103,9 +119,9 @@ export default function TabLayout() {
         options={{
           title: "Profile",
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon 
-              name={focused ? "person" : "person-outline"} 
-              color={color} 
+            <TabBarIcon
+              name={focused ? "person" : "person-outline"}
+              color={color}
               size={24}
             />
           ),

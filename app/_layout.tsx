@@ -4,7 +4,7 @@ import {
   ThemeProvider,
 } from "@react-navigation/native";
 import { useFonts } from "expo-font";
-import { SplashScreen, Stack } from "expo-router";
+import { router, SplashScreen, Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import "react-native-reanimated";
 import { useColorScheme } from "@/hooks/useColorScheme";
@@ -13,7 +13,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Asset } from "expo-asset";
 import { ToastProvider } from "react-native-toast-notifications";
 import { RecoilRoot } from "recoil";
-import { AuthProvider } from "@/hooks/useAuth";
+import  { AuthProvider } from "@/hooks/useAuth";
 
 
 
@@ -27,6 +27,8 @@ export default function RootLayout() {
     RubikMedium: require("../assets/fonts/Rubik-Medium.ttf"),
     RubikSemibold: require("../assets/fonts/Rubik-SemiBold.ttf"),
   });
+
+
 
   useEffect(() => {
     if (loaded) {
