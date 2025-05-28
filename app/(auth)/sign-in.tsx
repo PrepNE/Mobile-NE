@@ -1,4 +1,14 @@
-import { View, Text, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard, ScrollView, TouchableOpacity, Alert } from 'react-native';
+import {
+  View,
+  Text,
+  KeyboardAvoidingView,
+  Platform,
+  TouchableWithoutFeedback,
+  Keyboard,
+  ScrollView,
+  TouchableOpacity,
+  Alert,
+} from 'react-native';
 import React, { useState, useEffect } from 'react';
 import CustomInput from '@/components/CustomInput';
 import CustomButton from '@/components/CustomButton';
@@ -9,11 +19,24 @@ import useAuth from '@/hooks/useAuth';
 const SignIn = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  type FormErrors = Record<string, string | null>;
-  const [formErrors, setFormErrors] = useState<FormErrors>({});
-
-
+  const [formErrors, setFormErrors] = useState<Record<string, string | null>>({});
   const { login, loading, error, user } = useAuth();
+
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () =>
+      setKeyboardVisible(true)
+    );
+    const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () =>
+      setKeyboardVisible(false)
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
 
   useEffect(() => {
     if (user) {
@@ -30,7 +53,6 @@ const SignIn = () => {
     }
   }, [username, password]);
 
-  // Clear form errors when auth error changes
   useEffect(() => {
     if (error) {
       setFormErrors({});
@@ -38,29 +60,24 @@ const SignIn = () => {
   }, [error]);
 
   const validateForm = () => {
-    const errors: FormErrors = {};
+    const errors: Record<string, string> = {};
     if (!username.trim()) {
       errors.username = 'Username is required';
     } else if (username.length < 3) {
       errors.username = 'Username must be at least 3 characters';
     }
-
-
     if (!password.trim()) {
       errors.password = 'Password is required';
     } else if (password.length < 4) {
       errors.password = 'Password must be at least 4 characters';
     }
-
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
   };
 
   const handleSignIn = async () => {
     setFormErrors({});
-    if (!validateForm()) {
-      return;
-    }
+    if (!validateForm()) return;
 
     try {
       await login(username.trim(), password);
@@ -70,19 +87,15 @@ const SignIn = () => {
   };
 
   const handleForgotPassword = () => {
-    Alert.alert(
-      "Forgot Password",
-      "Please contact your administrator to reset your password.",
-      [{ text: "OK" }]
-    );
+    Alert.alert("Forgot Password", "Please contact your administrator to reset your password.", [
+      { text: "OK" },
+    ]);
   };
 
   const handleSignUp = () => {
-    Alert.alert(
-      "Sign Up",
-      "Please contact your administrator to create a new account.",
-      [{ text: "OK" }]
-    );
+    Alert.alert("Sign Up", "Please contact your administrator to create a new account.", [
+      { text: "OK" },
+    ]);
   };
 
   const handleTestCredentials = () => {
@@ -100,16 +113,16 @@ const SignIn = () => {
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <ScrollView contentContainerStyle={{ flexGrow: 1, padding: 20, justifyContent: 'center' }}>
-
           <View className="w-full items-center mb-8">
             <View className="bg-[#0286FF] w-16 h-16 rounded-full items-center justify-center mb-4">
               <Ionicons name="wallet-outline" size={32} color="white" />
             </View>
             <Text className="text-3xl font-bold text-[#0286FF] text-center">Personal Finance Tracker</Text>
-            <Text className="text-neutral-500 mt-2 text-center">Login to manage your expenses and budgets</Text>
+            <Text className="text-neutral-500 mt-2 text-center">
+              Login to manage your expenses and budgets
+            </Text>
           </View>
 
- 
           {error && (
             <View className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4 flex-row items-center">
               <Ionicons name="alert-circle-outline" size={20} color="#DC2626" />
@@ -129,7 +142,6 @@ const SignIn = () => {
             editable={!loading}
           />
 
-  
           <CustomInput
             label="Password"
             placeholder="Enter your password"
@@ -141,7 +153,6 @@ const SignIn = () => {
             editable={!loading}
           />
 
-  
           <TouchableOpacity
             onPress={handleForgotPassword}
             className="self-end mt-2 mb-2"
@@ -150,26 +161,25 @@ const SignIn = () => {
             <Text className="text-[#0286FF] text-sm">Forgot Password?</Text>
           </TouchableOpacity>
 
-     
-          <CustomButton
-            title={loading ? "Signing In..." : "Sign In"}
-            onPress={handleSignIn}
-            className="mt-4"
-            disabled={loading || !username.trim() || !password.trim()}
-            loading={loading}
-          />
+          {!isKeyboardVisible && (
+            <CustomButton
+              title={loading ? "Signing In..." : "Sign In"}
+              onPress={handleSignIn}
+              className="mt-4"
+              disabled={loading || !username.trim() || !password.trim()}
+              loading={loading}
+            />
+          )}
 
-  
-          <TouchableOpacity
-            onPress={handleTestCredentials}
-            className="self-center mt-4 p-2"
-            disabled={loading}
-          >
-            <Text className="text-neutral-500 text-sm underline">Need test credentials?</Text>
-          </TouchableOpacity>
-
-   
-       
+          {!isKeyboardVisible && (
+            <TouchableOpacity
+              onPress={handleTestCredentials}
+              className="self-center mt-4 p-2"
+              disabled={loading}
+            >
+              <Text className="text-neutral-500 text-sm underline">Need test credentials?</Text>
+            </TouchableOpacity>
+          )}
 
           <View className="mt-8 p-4 bg-blue-50 rounded-lg">
             <Text className="text-xs text-neutral-600 text-center">
